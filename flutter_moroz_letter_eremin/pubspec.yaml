@@ -58,10 +58,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-  assets:
-    - assets/animations/
-    - assets/images/
-    - assets/fonts/
   
   fonts:
     - family: Comic
