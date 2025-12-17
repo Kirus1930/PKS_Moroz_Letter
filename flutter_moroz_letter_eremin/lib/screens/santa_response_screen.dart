@@ -40,7 +40,7 @@ class _SantaResponseScreenState extends State<SantaResponseScreen> {
 Я, Дед Мороз, получил твое письмо и очень рад, что ты такой хороший ребёнок!
 ${_letter!.age} лет - отличный возраст для новых приключений!
 
-${_letter!.wishes.isNotEmpty ? 'Особенно мне понравилось твое желание получить "${_letter!.wishes[0]}". Мои эльфы уже начали его готовить!' : ''}
+${_letter!.wishes.isNotEmpty ? 'Особенно мне понравилось твое желание получить "${_letter!.wishes[0]}". Мои помощники уже начали его готовить!' : ''}
 ${_letter!.secretGiftFromParent != null ? 'А ещё я узнал, что ты очень хочешь ${_letter!.secretGiftFromParent}. Постараюсь выполнить и это желание!' : ''}
 
 Продолжай хорошо себя вести, помогай родителям и учись на отлично!
@@ -61,9 +61,22 @@ ${_letter!.wishes.length > 1 ? 'Насчёт "${_letter!.wishes[1]}" - это о
 Жди меня в новогоднюю ночь!
 Твой Дед Мороз ⭐
 ''',
+      '''
+Дорогой ${_letter!.childName}!
+
+Спасибо за твоё чудесное письмо! Я внимательно прочитал его в своей резиденции в Великом Устюге.
+Вижу, что ты очень старался в этом году и заслуживаешь только лучших подарков!
+
+${_letter!.wishes.isNotEmpty ? 'Насчёт "${_letter!.wishes[0]}" - уже передал своим помощникам, чтобы приготовили к празднику!' : ''}
+Не забудь оставить мне под ёлочкой морковку для оленей и печенье для меня!
+
+До скорой встречи,
+Твой Дед Мороз 🦌
+''',
     ];
 
-    final randomResponse = responses[DateTime.now().second % responses.length];
+    final randomResponse =
+        responses[DateTime.now().millisecondsSinceEpoch % responses.length];
     setState(() => _santaResponse = randomResponse);
   }
 
@@ -72,18 +85,25 @@ ${_letter!.wishes.length > 1 ? 'Насчёт "${_letter!.wishes[1]}" - это о
     return Scaffold(
       appBar: AppBar(
         title: const Text('Ответ от Деда Мороза'),
-        backgroundColor: Colors.red,
+        backgroundColor: const Color(0xFFD32F2F),
         actions: [
-          IconButton(icon: const Icon(Icons.share), onPressed: _shareResponse),
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: _shareResponse,
+            tooltip: 'Поделиться ответом',
+          ),
         ],
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(
+              child: CircularProgressIndicator(color: Color(0xFFD32F2F)),
+            )
           : Container(
               decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/santa_background.jpg'),
-                  fit: BoxFit.cover,
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xFF1A237E), Color(0xFF311B92)],
                 ),
               ),
               child: SingleChildScrollView(
@@ -92,67 +112,85 @@ ${_letter!.wishes.length > 1 ? 'Насчёт "${_letter!.wishes[1]}" - это о
                   children: [
                     // Анимация Деда Мороза
                     SizedBox(
-                      height: 200,
+                      height: 180,
                       child: Lottie.asset(
                         'assets/animations/santa_waving.json',
+                        fit: BoxFit.contain,
                       ),
                     ),
 
-                    // Конверт
+                    const SizedBox(height: 10),
+
+                    // Конверт с письмом
                     Card(
-                      elevation: 10,
+                      elevation: 12,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Container(
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
-                            colors: [Colors.white, Color(0xFFFFF3E0)],
+                            colors: [Colors.white, Color(0xFFFFF8E1)],
                           ),
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.red.withOpacity(0.3),
+                              blurRadius: 15,
+                              spreadRadius: 2,
+                            ),
+                          ],
                         ),
                         padding: const EdgeInsets.all(25),
                         child: Column(
                           children: [
-                            // Штамп
+                            // Штамп с Великим Устюгом
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Container(
                                   padding: const EdgeInsets.symmetric(
                                     horizontal: 15,
-                                    vertical: 5,
+                                    vertical: 8,
                                   ),
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                      color: Colors.red,
+                                      color: const Color(0xFFD32F2F),
                                       width: 2,
                                     ),
-                                    borderRadius: BorderRadius.circular(10),
+                                    borderRadius: BorderRadius.circular(12),
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.red.shade50,
+                                        Colors.white,
+                                      ],
+                                    ),
                                   ),
                                   child: const Text(
-                                    'СЕВЕРНЫЙ ПОЛЮС',
+                                    'ВЕЛИКИЙ УСТЮГ',
                                     style: TextStyle(
-                                      color: Colors.red,
+                                      color: Color(0xFFD32F2F),
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 12,
+                                      fontSize: 14,
+                                      letterSpacing: 1.2,
                                     ),
                                   ),
                                 ),
                               ],
                             ),
 
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 25),
 
                             // Заголовок
                             const Text(
                               'ОТ ДЕДА МОРОЗА',
                               style: TextStyle(
-                                fontSize: 24,
+                                fontSize: 26,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.red,
+                                color: Color(0xFFB71C1C),
+                                letterSpacing: 1.5,
                               ),
                             ),
 
@@ -163,40 +201,85 @@ ${_letter!.wishes.length > 1 ? 'Насчёт "${_letter!.wishes[1]}" - это о
                               padding: const EdgeInsets.all(20),
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: Colors.blueGrey.shade200,
+                                  color: Colors.blueGrey.shade300,
+                                  width: 1.5,
                                 ),
-                                borderRadius: BorderRadius.circular(10),
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.white,
                               ),
                               child: Text(
                                 _santaResponse,
                                 style: const TextStyle(
                                   fontSize: 18,
-                                  height: 1.5,
+                                  height: 1.6,
                                   color: Colors.blueGrey,
+                                  fontFamily: 'Comic',
                                 ),
                               ),
                             ),
 
                             const SizedBox(height: 30),
 
-                            // Подпись
+                            // Подпись и печать
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Image.asset(
-                                      'assets/images/santa_signature.png',
-                                      height: 50,
+                                    const Text(
+                                      'С уважением,',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.blueGrey,
+                                      ),
                                     ),
                                     const SizedBox(height: 5),
                                     const Text(
                                       'Дед Мороз',
                                       style: TextStyle(
-                                        fontSize: 16,
+                                        fontSize: 20,
                                         fontWeight: FontWeight.bold,
-                                        color: Colors.blueGrey,
+                                        color: Color(0xFFD32F2F),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      'Великий Устюг, ${DateTime.now().year} г.',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey[600],
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    Image.asset(
+                                      'assets/images/santa_signature.png',
+                                      height: 60,
+                                      fit: BoxFit.contain,
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.red,
+                                          width: 1,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: const Text(
+                                        'Печать',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.red,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -208,35 +291,100 @@ ${_letter!.wishes.length > 1 ? 'Насчёт "${_letter!.wishes[1]}" - это о
                       ),
                     ),
 
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 40),
 
-                    // Кнопки
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton.icon(
-                          onPressed: _saveResponse,
-                          icon: const Icon(Icons.save),
-                          label: const Text('Сохранить'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.green,
+                    // Кнопки действий
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton.icon(
+                            onPressed: _saveResponse,
+                            icon: const Icon(Icons.save_alt, size: 22),
+                            label: const Text(
+                              'Сохранить',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF388E3C),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 25,
+                                vertical: 15,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              elevation: 5,
+                            ),
                           ),
-                        ),
-                        ElevatedButton.icon(
-                          onPressed: _printResponse,
-                          icon: const Icon(Icons.print),
-                          label: const Text('Распечатать'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
+                          ElevatedButton.icon(
+                            onPressed: _printResponse,
+                            icon: const Icon(Icons.print, size: 22),
+                            label: const Text(
+                              'Поделиться',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF1976D2),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 25,
+                                vertical: 15,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              elevation: 5,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 30),
 
-                    // Сертификат
-                    _buildCertificate(),
+                    // Дополнительная информация
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: Colors.white30),
+                      ),
+                      child: const Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.info_outline,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                              SizedBox(width: 8),
+                              Text(
+                                'Интересный факт',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            'Дед Мороз живёт в Великом Устюге вместе со своей внучкой Снегурочкой. '
+                            'Каждый год он путешествует на своей волшебной тройке, чтобы поздравить всех детей с Новым Годом!',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -244,118 +392,40 @@ ${_letter!.wishes.length > 1 ? 'Насчёт "${_letter!.wishes[1]}" - это о
     );
   }
 
-  Widget _buildCertificate() {
-    return GestureDetector(
-      onTap: _showCertificate,
-      child: Card(
-        elevation: 5,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Row(
-            children: [
-              const Icon(Icons.card_giftcard, size: 40, color: Colors.green),
-              const SizedBox(width: 15),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Сертификат помощника Деда Мороза',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    Text(
-                      'Нажмите, чтобы посмотреть',
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(Icons.chevron_right),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Future<void> _shareResponse() async {
+    if (_santaResponse.isEmpty) return;
+
     await Share.share(
-      'Посмотрите, какой ответ я получил от Деда Мороза!\n\n$_santaResponse',
+      '🎅 Ответ от Деда Мороза 🎅\n\n$_santaResponse\n\nОтправлено из приложения "Письмо Деду Морозу"',
       subject: 'Ответ от Деда Мороза',
     );
   }
 
   Future<void> _saveResponse() async {
-    // Здесь будет сохранение в галерею
+    // Для будущей логики сохранения ответа как изображения
+    // Пока показываем уведомление
+    if (!mounted) return;
+
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Ответ сохранён в галерею!'),
+      SnackBar(
+        content: const Row(
+          children: [
+            Icon(Icons.check_circle, color: Colors.white, size: 20),
+            SizedBox(width: 10),
+            Text('Ответ сохранён в галерею'),
+          ],
+        ),
         backgroundColor: Colors.green,
+        duration: const Duration(seconds: 2),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
   }
 
   Future<void> _printResponse() async {
-    // Здесь будет логика печати
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Готово к печати!')));
-  }
-
-  void _showCertificate() {
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Colors.blue[50]!, Colors.white],
-            ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text(
-                '🎅 СЕРТИФИКАТ 🎅',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                'Награждается\n${_letter?.childName ?? 'Дорогой друг'}',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 10),
-              const Text(
-                'за отличное поведение в этом году\nи веру в новогоднее чудо!',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 30),
-              Image.asset('assets/images/santa_stamp.png', height: 100),
-              const SizedBox(height: 20),
-              const Text(
-                'Северный Полюс, ${DateTime.now().year} г.',
-                style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    // Логика для кнопки "Поделиться" уже реализована в _shareResponse
+    // Можно вызвать ту же функцию или добавить дополнительную логику
+    await _shareResponse();
   }
 }
