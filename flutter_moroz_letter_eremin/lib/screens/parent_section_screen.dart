@@ -1,4 +1,3 @@
-// screens/parent_section_screen.dart
 import 'package:flutter/material.dart';
 import '../services/parent_auth_service.dart';
 import '../services/letter_service.dart';
