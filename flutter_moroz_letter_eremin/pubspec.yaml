@@ -61,5 +61,3 @@ flutter:
   
   fonts:
     - family: Comic
-      fonts:
-        - asset: assets/fonts/Comic.ttf
