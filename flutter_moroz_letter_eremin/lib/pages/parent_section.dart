@@ -5,6 +5,7 @@ import 'package:flutter_moroz_letter_eremin/repositories/letter_repository.dart'
 import 'package:flutter_moroz_letter_eremin/services/database_service.dart';
 import 'package:flutter_moroz_letter_eremin/services/response_generator.dart';
 import 'package:intl/intl.dart';
+import '../theme/app_theme.dart';
 
 class ParentSection extends StatefulWidget {
   const ParentSection({super.key});
@@ -20,7 +21,7 @@ class _ParentSectionState extends State<ParentSection> {
   String _errorMessage = '';
   List<Letter> _letters = [];
   late LetterRepository _repository;
-  final String _correctPin = '1234'; // Простой PIN для демонстрации
+  final String _correctPin = '1234';
   bool _isLoading = false;
   final DateFormat _dateFormat = DateFormat('dd.MM.yyyy HH:mm');
 
@@ -98,8 +99,11 @@ class _ParentSectionState extends State<ParentSection> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Секретный подарок добавлен'),
+        SnackBar(
+          content: Text(
+            'Секретный подарок добавлен',
+            style: TextStyle(color: Colors.white),
+          ),
           backgroundColor: Colors.green,
         ),
       );
@@ -107,7 +111,10 @@ class _ParentSectionState extends State<ParentSection> {
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),
+        SnackBar(
+          content: Text('Ошибка: $e', style: TextStyle(color: Colors.white)),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }
@@ -126,8 +133,11 @@ class _ParentSectionState extends State<ParentSection> {
     if (!mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Ответ от Деда Мороза создан'),
+      SnackBar(
+        content: Text(
+          'Ответ от Деда Мороза создан',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.green,
       ),
     );
@@ -141,23 +151,50 @@ class _ParentSectionState extends State<ParentSection> {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Редактировать письмо'),
+        title: Text(
+          'Редактировать письмо',
+          style: TextStyle(color: AppTheme.blueText),
+        ),
+        backgroundColor: Colors.white,
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: nameController,
-                decoration: const InputDecoration(labelText: 'Имя ребенка'),
+                style: TextStyle(color: AppTheme.lightRedText),
+                decoration: InputDecoration(
+                  labelText: 'Имя ребенка',
+                  labelStyle: TextStyle(color: AppTheme.lightRedText),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
               ),
+              const SizedBox(height: 12),
               TextField(
                 controller: ageController,
-                decoration: const InputDecoration(labelText: 'Возраст'),
+                style: TextStyle(color: AppTheme.lightRedText),
+                decoration: InputDecoration(
+                  labelText: 'Возраст',
+                  labelStyle: TextStyle(color: AppTheme.lightRedText),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
                 keyboardType: TextInputType.number,
               ),
+              const SizedBox(height: 12),
               TextField(
                 controller: storyController,
-                decoration: const InputDecoration(labelText: 'Рассказ'),
+                style: TextStyle(color: AppTheme.lightRedText),
+                decoration: InputDecoration(
+                  labelText: 'Рассказ',
+                  labelStyle: TextStyle(color: AppTheme.lightRedText),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
                 maxLines: 3,
               ),
             ],
@@ -166,7 +203,10 @@ class _ParentSectionState extends State<ParentSection> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
+            child: Text(
+              'Отмена',
+              style: TextStyle(color: AppTheme.lightRedText),
+            ),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -185,12 +225,18 @@ class _ParentSectionState extends State<ParentSection> {
               Navigator.pop(context);
 
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Письмо обновлено'),
+                SnackBar(
+                  content: Text(
+                    'Письмо обновлено',
+                    style: TextStyle(color: Colors.white),
+                  ),
                   backgroundColor: Colors.green,
                 ),
               );
             },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.accentColor,
+            ),
             child: const Text('Сохранить'),
           ),
         ],
@@ -218,11 +264,11 @@ class _ParentSectionState extends State<ParentSection> {
           ),
         ),
         body: Container(
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [Colors.blue, Colors.purple],
+              colors: [AppTheme.lightBlueBackground, Colors.lightBlue[100]!],
             ),
           ),
           child: Center(
@@ -231,68 +277,103 @@ class _ParentSectionState extends State<ParentSection> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.lock, size: 80, color: Colors.white),
-                  const SizedBox(height: 20),
-                  const Text(
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blue.withOpacity(0.2),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      Icons.lock,
+                      size: 80,
+                      color: AppTheme.lightRedText,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  Text(
                     'Родительский раздел',
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: AppTheme.blueText,
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const Text(
+                  Text(
                     'Введите PIN-код для доступа',
-                    style: TextStyle(fontSize: 16, color: Colors.white70),
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: AppTheme.lightRedText,
+                    ),
                   ),
                   const SizedBox(height: 30),
-                  TextField(
-                    controller: _pinController,
-                    keyboardType: TextInputType.number,
-                    obscureText: true,
-                    style: const TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.blue.withOpacity(0.1),
+                          blurRadius: 6,
+                          offset: const Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: TextField(
+                      controller: _pinController,
+                      keyboardType: TextInputType.number,
+                      obscureText: true,
+                      style: TextStyle(color: AppTheme.lightRedText),
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.all(16),
+                        labelText: 'PIN',
+                        labelStyle: TextStyle(color: AppTheme.lightRedText),
+                        prefixIcon: Icon(
+                          Icons.password,
+                          color: AppTheme.lightRedText,
+                        ),
+                        errorText: _errorMessage.isNotEmpty
+                            ? _errorMessage
+                            : null,
+                        errorStyle: const TextStyle(color: Colors.red),
                       ),
-                      filled: true,
-                      fillColor: Colors.white.withOpacity(0.2),
-                      labelText: 'PIN',
-                      labelStyle: const TextStyle(color: Colors.white70),
-                      prefixIcon: const Icon(
-                        Icons.password,
-                        color: Colors.white70,
-                      ),
-                      errorText: _errorMessage.isNotEmpty
-                          ? _errorMessage
-                          : null,
-                      errorStyle: const TextStyle(color: Colors.yellow),
                     ),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: _authenticate,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.blue,
                       padding: const EdgeInsets.symmetric(
                         horizontal: 40,
-                        vertical: 15,
+                        vertical: 16,
                       ),
+                      backgroundColor: AppTheme.accentColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text('Войти', style: TextStyle(fontSize: 18)),
+                    child: const Text(
+                      'Войти',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
+                  Text(
                     'Подсказка: PIN-код - 1234',
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.white70,
+                      color: AppTheme.lightRedText.withOpacity(0.7),
                       fontStyle: FontStyle.italic,
                     ),
                   ),
@@ -319,221 +400,346 @@ class _ParentSectionState extends State<ParentSection> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.blue.shade50,
-              border: Border(bottom: BorderSide(color: Colors.blue.shade200)),
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.family_restroom, color: Colors.blue),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    'Найдено писем: ${_letters.length}',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [AppTheme.lightBlueBackground, Colors.lightBlue[100]!],
+          ),
+        ),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.9),
+                border: Border(bottom: BorderSide(color: Colors.blue[200]!)),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.family_restroom, color: AppTheme.lightRedText),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      'Найдено писем: ${_letters.length}',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.blueText,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          if (_isLoading)
-            const Padding(
-              padding: EdgeInsets.all(20),
-              child: CircularProgressIndicator(),
-            )
-          else if (_letters.isEmpty)
-            Expanded(
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.mail_outline,
-                      size: 80,
-                      color: Colors.grey,
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Писем пока нет',
-                      style: TextStyle(fontSize: 18, color: Colors.grey),
-                    ),
-                    const SizedBox(height: 10),
-                    TextButton(
-                      onPressed: _loadLetters,
-                      child: const Text('Обновить'),
-                    ),
-                  ],
-                ),
+                ],
               ),
-            )
-          else
-            Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: _letters.length,
-                itemBuilder: (context, index) {
-                  final letter = _letters[index];
-                  return Card(
-                    margin: const EdgeInsets.only(bottom: 16),
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                backgroundColor: Colors.blue.shade100,
-                                child: Text(
-                                  letter.childName.isNotEmpty
-                                      ? letter.childName[0].toUpperCase()
-                                      : '?',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      letter.childName,
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18,
-                                      ),
-                                    ),
-                                    Text('Возраст: ${letter.age}'),
-                                  ],
-                                ),
-                              ),
-                              PopupMenuButton(
-                                itemBuilder: (context) => [
-                                  const PopupMenuItem(
-                                    value: 'edit',
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.edit, size: 20),
-                                        SizedBox(width: 8),
-                                        Text('Редактировать'),
-                                      ],
-                                    ),
-                                  ),
-                                  const PopupMenuItem(
-                                    value: 'response',
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.mail, size: 20),
-                                        SizedBox(width: 8),
-                                        Text('Создать ответ'),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                                onSelected: (value) {
-                                  if (value == 'edit') {
-                                    _editLetter(letter);
-                                  } else if (value == 'response') {
-                                    _generateResponseManually(letter);
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'Рассказ:',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          Text(letter.story),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'Желания:',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          ...letter.wishes
-                              .map((wish) => Text('• $wish'))
-                              .toList(),
-                          const SizedBox(height: 10),
-                          Text(
-                            'Отправлено: ${_dateFormat.format(letter.createdAt)}',
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey,
-                            ),
-                          ),
-                          if (letter.hasResponse) ...[
-                            const SizedBox(height: 10),
-                            const Text(
-                              'Ответ:',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              margin: const EdgeInsets.only(top: 5),
-                              decoration: BoxDecoration(
-                                color: Colors.green.shade50,
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                  color: Colors.green.shade200,
-                                ),
-                              ),
-                              child: Text(letter.responseText!),
-                            ),
-                          ],
-                          const SizedBox(height: 20),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: TextField(
-                                  controller: _secretGiftController,
-                                  decoration: InputDecoration(
-                                    labelText: 'Добавить секретный подарок',
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    contentPadding: const EdgeInsets.symmetric(
-                                      horizontal: 12,
-                                      vertical: 8,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              ElevatedButton(
-                                onPressed: () => _addSecretGift(letter.id!),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.purple,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                child: const Text('Добавить'),
-                              ),
-                            ],
+            ),
+            if (_isLoading)
+              Expanded(
+                child: Center(
+                  child: CircularProgressIndicator(color: AppTheme.accentColor),
+                ),
+              )
+            else if (_letters.isEmpty)
+              Expanded(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.mail_outline,
+                        size: 80,
+                        color: AppTheme.lightRedText.withOpacity(0.5),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        'Писем пока нет',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: AppTheme.lightRedText,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: _loadLetters,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.accentColor,
+                        ),
+                        child: const Text('Обновить'),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            else
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: _letters.length,
+                  itemBuilder: (context, index) {
+                    final letter = _letters[index];
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.blue.withOpacity(0.1),
+                            blurRadius: 6,
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
-                    ),
-                  );
-                },
+                      child: Card(
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        color: Colors.white.withOpacity(0.95),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundColor: Colors.blue[100],
+                                    child: Text(
+                                      letter.childName.isNotEmpty
+                                          ? letter.childName[0].toUpperCase()
+                                          : '?',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: AppTheme.blueText,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          letter.childName,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18,
+                                            color: AppTheme.lightRedText,
+                                          ),
+                                        ),
+                                        Text(
+                                          'Возраст: ${letter.age}',
+                                          style: TextStyle(
+                                            color: AppTheme.lightRedText
+                                                .withOpacity(0.9),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuButton(
+                                    icon: Icon(
+                                      Icons.more_vert,
+                                      color: AppTheme.lightRedText,
+                                    ),
+                                    itemBuilder: (context) => [
+                                      PopupMenuItem(
+                                        value: 'edit',
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.edit,
+                                              size: 20,
+                                              color: AppTheme.lightRedText,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              'Редактировать',
+                                              style: TextStyle(
+                                                color: AppTheme.lightRedText,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      PopupMenuItem(
+                                        value: 'response',
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.mail,
+                                              size: 20,
+                                              color: AppTheme.lightRedText,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              'Создать ответ',
+                                              style: TextStyle(
+                                                color: AppTheme.lightRedText,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                    onSelected: (value) {
+                                      if (value == 'edit') {
+                                        _editLetter(letter);
+                                      } else if (value == 'response') {
+                                        _generateResponseManually(letter);
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                'Рассказ:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.blueText,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.8),
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: AppTheme.lightRedText.withOpacity(
+                                      0.3,
+                                    ),
+                                  ),
+                                ),
+                                child: Text(
+                                  letter.story,
+                                  style: TextStyle(
+                                    color: AppTheme.lightRedText,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Text(
+                                'Желания:',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.blueText,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              ...letter.wishes
+                                  .map(
+                                    (wish) => Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 6,
+                                      ),
+                                      margin: const EdgeInsets.only(bottom: 4),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.8),
+                                        borderRadius: BorderRadius.circular(6),
+                                        border: Border.all(
+                                          color: AppTheme.lightRedText
+                                              .withOpacity(0.3),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        '• $wish',
+                                        style: TextStyle(
+                                          color: AppTheme.lightRedText,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                  .toList(),
+                              const SizedBox(height: 12),
+                              Text(
+                                'Отправлено: ${_dateFormat.format(letter.createdAt)}',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: AppTheme.lightRedText.withOpacity(0.6),
+                                ),
+                              ),
+                              if (letter.hasResponse) ...[
+                                const SizedBox(height: 12),
+                                Text(
+                                  'Ответ:',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AppTheme.blueText,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Container(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.green[50],
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: Colors.green[200]!,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    letter.responseText!,
+                                    style: TextStyle(color: Colors.green[900]),
+                                  ),
+                                ),
+                              ],
+                              const SizedBox(height: 16),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: _secretGiftController,
+                                      style: TextStyle(
+                                        color: AppTheme.lightRedText,
+                                      ),
+                                      decoration: InputDecoration(
+                                        labelText: 'Добавить секретный подарок',
+                                        labelStyle: TextStyle(
+                                          color: AppTheme.lightRedText,
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                          borderSide: BorderSide(
+                                            color: AppTheme.lightRedText
+                                                .withOpacity(0.5),
+                                          ),
+                                        ),
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                              horizontal: 12,
+                                              vertical: 8,
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  ElevatedButton(
+                                    onPressed: () => _addSecretGift(letter.id!),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.purple,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: const Text('Добавить'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
