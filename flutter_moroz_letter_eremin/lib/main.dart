@@ -1,52 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter/services.dart';
-import 'screens/home_screen.dart';
-import 'screens/create_letter_screen.dart';
-import 'screens/delivery_tracking_screen.dart';
-import 'screens/santa_response_screen.dart';
-import 'screens/parent_section_screen.dart';
-import 'services/letter_service.dart';
-import 'services/parent_auth_service.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_moroz_letter_eremin/pages/home_page.dart';
+import 'package:flutter_moroz_letter_eremin/services/database_service.dart';
+import 'package:flutter_moroz_letter_eremin/theme/app_theme.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  await LetterService.init();
-  await ParentAuthService.init();
+  await dotenv.load(fileName: ".env");
 
-  // Блокируем горизонтальную ориентацию
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+  // Инициализация БД (по желанию пользователя)
+  final useDatabase = await DatabaseService.shouldUseDatabase();
+  if (useDatabase) {
+    await DatabaseService.init();
+  }
 
-  runApp(const SantaLetterApp());
+  runApp(const LetterApp());
 }
 
-class SantaLetterApp extends StatelessWidget {
-  const SantaLetterApp({super.key});
+class LetterApp extends StatelessWidget {
+  const LetterApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Письмо Деду Морозу',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        fontFamily: 'Comic',
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: const HomeScreen(),
-      routes: {
-        '/home': (context) => const HomeScreen(),
-        '/create-letter': (context) => const CreateLetterScreen(),
-        '/track-delivery': (context) => const DeliveryTrackingScreen(),
-        '/santa-response': (context) => const SantaResponseScreen(),
-        '/parent-section': (context) => const ParentSectionScreen(),
-      },
+      theme: AppTheme.winterTheme,
       debugShowCheckedModeBanner: false,
+      home: const HomePage(),
     );
   }
 }
