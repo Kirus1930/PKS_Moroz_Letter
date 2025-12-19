@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
             tooltip: _useDatabase ? 'Использовать БД' : 'Использовать память',
           ),
           IconButton(
-            icon: const Icon(Icons.parent_mode),
+            icon: const Icon(Icons.people),
             onPressed: () => _showParentSection(context),
           ),
         ],
