@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../models/letter.dart';
 import '../repositories/letter_repository.dart';
+import '../theme/app_theme.dart';
 
 class CreateLetterPage extends StatefulWidget {
   final LetterRepository repository;
@@ -68,14 +69,20 @@ class _CreateLetterPageState extends State<CreateLetterPage> {
         Navigator.pop(context);
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Письмо отправлено Деду Морозу!'),
-            backgroundColor: Colors.green,
+          SnackBar(
+            content: Text(
+              'Письмо отправлено Деду Морозу!',
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: AppTheme.accentColor,
           ),
         );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Ошибка: $e'), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text('Ошибка: $e', style: TextStyle(color: Colors.white)),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     }
@@ -85,102 +92,324 @@ class _CreateLetterPageState extends State<CreateLetterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Новое письмо')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [AppTheme.lightBlueBackground, Colors.lightBlue[100]!],
+          ),
+        ),
         child: Form(
           key: _formKey,
           child: ListView(
+            padding: const EdgeInsets.all(20),
             children: [
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Твоё имя',
-                  icon: Icon(Icons.person),
+              // Имя
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Введите своё имя';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _ageController,
-                decoration: const InputDecoration(
-                  labelText: 'Возраст',
-                  icon: Icon(Icons.cake),
-                ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Введите возраст';
-                  }
-                  final age = int.tryParse(value);
-                  if (age == null || age < 1 || age > 15) {
-                    return 'Введите возраст от 1 до 15';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _storyController,
-                decoration: const InputDecoration(
-                  labelText: 'Расскажи о себе',
-                  icon: Icon(Icons.book),
-                ),
-                maxLines: 3,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Расскажи что-нибудь о себе';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
-              const Text('Твои желания:', style: TextStyle(fontSize: 16)),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _wishController,
-                      decoration: const InputDecoration(
-                        hintText: 'Добавить желание',
-                      ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TextFormField(
+                    controller: _nameController,
+                    style: TextStyle(
+                      color: AppTheme.lightRedText,
+                      fontSize: 16,
                     ),
+                    decoration: InputDecoration(
+                      labelText: 'Твоё имя',
+                      labelStyle: TextStyle(color: AppTheme.lightRedText),
+                      icon: Icon(Icons.person, color: AppTheme.lightRedText),
+                      border: InputBorder.none,
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Введите своё имя';
+                      }
+                      return null;
+                    },
                   ),
-                  IconButton(icon: const Icon(Icons.add), onPressed: _addWish),
-                ],
+                ),
               ),
-              ...wishes.asMap().entries.map((entry) {
-                final index = entry.key;
-                final wish = entry.value;
-                return ListTile(
-                  title: Text(wish),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.remove),
-                    onPressed: () => _removeWish(index),
+              const SizedBox(height: 16),
+
+              // Возраст
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TextFormField(
+                    controller: _ageController,
+                    style: TextStyle(
+                      color: AppTheme.lightRedText,
+                      fontSize: 16,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'Возраст',
+                      labelStyle: TextStyle(color: AppTheme.lightRedText),
+                      icon: Icon(Icons.cake, color: AppTheme.lightRedText),
+                      border: InputBorder.none,
+                    ),
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Введите возраст';
+                      }
+                      final age = int.tryParse(value);
+                      if (age == null || age < 1 || age > 15) {
+                        return 'Введите возраст от 1 до 15';
+                      }
+                      return null;
+                    },
                   ),
-                );
-              }).toList(),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Рассказ о себе
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: TextFormField(
+                    controller: _storyController,
+                    style: TextStyle(
+                      color: AppTheme.lightRedText,
+                      fontSize: 16,
+                    ),
+                    decoration: InputDecoration(
+                      labelText: 'Расскажи о себе',
+                      labelStyle: TextStyle(color: AppTheme.lightRedText),
+                      icon: Icon(Icons.book, color: AppTheme.lightRedText),
+                      border: InputBorder.none,
+                      alignLabelWithHint: true,
+                    ),
+                    maxLines: 4,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Расскажи что-нибудь о себе';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Желания
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Твои желания:',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.lightRedText,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _wishController,
+                              style: TextStyle(
+                                color: AppTheme.lightRedText,
+                                fontSize: 16,
+                              ),
+                              decoration: InputDecoration(
+                                hintText: 'Добавить желание...',
+                                hintStyle: TextStyle(
+                                  color: AppTheme.lightRedText.withOpacity(0.7),
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    color: AppTheme.lightRedText.withOpacity(
+                                      0.5,
+                                    ),
+                                  ),
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          ElevatedButton(
+                            onPressed: _addWish,
+                            style: ElevatedButton.styleFrom(
+                              shape: const CircleBorder(),
+                              padding: const EdgeInsets.all(12),
+                              backgroundColor: AppTheme.accentColor,
+                            ),
+                            child: const Icon(Icons.add, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      if (wishes.isNotEmpty) ...[
+                        Column(
+                          children: wishes.asMap().entries.map((entry) {
+                            final index = entry.key;
+                            final wish = entry.value;
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 8),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.8),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: AppTheme.lightRedText.withOpacity(0.3),
+                                ),
+                              ),
+                              child: ListTile(
+                                title: Text(
+                                  wish,
+                                  style: TextStyle(
+                                    color: AppTheme.lightRedText,
+                                  ),
+                                ),
+                                trailing: IconButton(
+                                  icon: Icon(
+                                    Icons.remove,
+                                    color: AppTheme.lightRedText,
+                                  ),
+                                  onPressed: () => _removeWish(index),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ] else ...[
+                        Text(
+                          'Пока нет желаний. Добавь первое!',
+                          style: TextStyle(
+                            color: AppTheme.lightRedText.withOpacity(0.7),
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Рисунок
+              Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Рисунок для Деда Мороза:',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.lightRedText,
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      if (_drawing != null)
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: AppTheme.lightRedText.withOpacity(0.3),
+                              width: 2,
+                            ),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.file(
+                              _drawing!,
+                              height: 200,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.photo, size: 24),
+                        label: const Text('Добавить рисунок'),
+                        onPressed: _pickImage,
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 15,
+                          ),
+                          backgroundColor: Colors.blue[700],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              // Кнопка отправки
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppTheme.accentColor.withOpacity(0.4),
+                      blurRadius: 10,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
+                ),
+                child: ElevatedButton(
+                  onPressed: _submitLetter,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 18),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    backgroundColor: AppTheme.accentColor,
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.send, size: 24),
+                      SizedBox(width: 12),
+                      Text(
+                        'Отправить письмо Деду Морозу',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
               const SizedBox(height: 20),
-              if (_drawing != null) Image.file(_drawing!, height: 200),
-              ElevatedButton.icon(
-                icon: const Icon(Icons.photo),
-                label: const Text('Добавить рисунок'),
-                onPressed: _pickImage,
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: _submitLetter,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
-                  padding: const EdgeInsets.symmetric(vertical: 15),
-                ),
-                child: const Text(
-                  'Отправить письмо Деду Морозу',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
             ],
           ),
         ),
