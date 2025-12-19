@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_moroz_letter_eremin/pages/create_letter_page.dart';
 import 'package:flutter_moroz_letter_eremin/pages/view_letter_page.dart';
 import 'package:flutter_moroz_letter_eremin/pages/parent_section.dart';
+import 'package:flutter_moroz_letter_eremin/pages/home_page.dart';
 import 'package:flutter_moroz_letter_eremin/services/new_year_timer.dart';
 import 'package:flutter_moroz_letter_eremin/repositories/letter_repository.dart';
 import 'package:flutter_moroz_letter_eremin/services/database_service.dart';
@@ -47,7 +48,9 @@ class _HomePageState extends State<HomePage> {
       SnackBar(
         content: Text(
           _useDatabase ? 'База данных подключена' : 'Режим без базы данных',
+          style: TextStyle(color: Colors.white),
         ),
+        backgroundColor: AppTheme.accentColor,
       ),
     );
   }
@@ -68,18 +71,21 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(_useDatabase ? Icons.storage : Icons.memory),
             onPressed: _toggleDatabase,
             tooltip: _useDatabase ? 'Использовать БД' : 'Использовать память',
+            color: Colors.white,
           ),
           IconButton(
             icon: const Icon(Icons.people),
             onPressed: () => _showParentSection(context),
+            color: Colors.white,
           ),
         ],
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/images/winter_bg.jpg'),
-            fit: BoxFit.cover,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [AppTheme.lightBlueBackground, Colors.lightBlue[100]!],
           ),
         ),
         child: Center(
@@ -88,96 +94,177 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.mail, size: 100, color: Colors.white),
-                const SizedBox(height: 20),
-                const Text(
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blue.withOpacity(0.2),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(
+                    Icons.mail,
+                    size: 120,
+                    color: Color(0xFFFF6B6B),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Text(
                   'Напиши письмо Деду Морозу!',
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
-                    color: Colors.red,
+                    color: AppTheme.blueText,
+                    shadows: [
+                      Shadow(
+                        color: Colors.white.withOpacity(0.8),
+                        blurRadius: 2,
+                        offset: const Offset(1, 1),
+                      ),
+                    ],
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 20),
-                StreamBuilder<Duration>(
-                  stream: _timeStream,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      final remaining = snapshot.data!;
-                      return Column(
-                        children: [
-                          Text(
-                            'До Нового Года осталось:',
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.white.withOpacity(0.9),
+                const SizedBox(height: 30),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(15),
+                    border: Border.all(
+                      color: AppTheme.lightRedText.withOpacity(0.3),
+                      width: 1,
+                    ),
+                  ),
+                  child: StreamBuilder<Duration>(
+                    stream: _timeStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final remaining = snapshot.data!;
+                        return Column(
+                          children: [
+                            Text(
+                              'До Нового Года осталось:',
+                              style: TextStyle(
+                                fontSize: 18,
+                                color: AppTheme.lightRedText,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            _timer.formatDuration(remaining),
-                            style: const TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.yellow,
+                            const SizedBox(height: 15),
+                            Text(
+                              _timer.formatDuration(remaining),
+                              style: TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                                color: AppTheme.accentColor,
+                                letterSpacing: 1.5,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            _timer.getDeliveryStatus(remaining),
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white.withOpacity(0.8),
-                              fontStyle: FontStyle.italic,
+                            const SizedBox(height: 15),
+                            Text(
+                              _timer.getDeliveryStatus(remaining),
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: AppTheme.lightRedText,
+                                fontStyle: FontStyle.italic,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        );
+                      }
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: AppTheme.accentColor,
+                        ),
                       );
-                    }
-                    return const CircularProgressIndicator();
-                  },
+                    },
+                  ),
                 ),
                 const SizedBox(height: 40),
-                SizedBox(
+                Container(
                   width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppTheme.accentColor.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
                   child: ElevatedButton.icon(
-                    icon: const Icon(Icons.edit),
-                    label: const Text(
-                      'Написать письмо',
-                      style: TextStyle(fontSize: 18),
-                    ),
+                    icon: const Icon(Icons.edit, size: 24),
+                    label: const Text('Написать письмо'),
                     onPressed: () => _createLetter(context),
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      backgroundColor: Colors.red,
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
-                SizedBox(
+                Container(
                   width: double.infinity,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.blue.withOpacity(0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
                   child: ElevatedButton.icon(
-                    icon: const Icon(Icons.history),
-                    label: const Text(
-                      'Мои письма',
-                      style: TextStyle(fontSize: 18),
-                    ),
+                    icon: const Icon(Icons.history, size: 24),
+                    label: const Text('Мои письма'),
                     onPressed: () => _viewLetters(context),
                     style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 15),
-                      backgroundColor: Colors.blue,
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      backgroundColor: Colors.blue[700],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Container(
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: AppTheme.lightRedText.withOpacity(0.2),
+                    ),
+                  ),
+                  child: Text(
+                    _useDatabase
+                        ? '📁 Данные сохраняются в SQLite'
+                        : '💾 Данные хранятся в памяти',
+                    style: TextStyle(
+                      color: AppTheme.lightRedText,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  _useDatabase
-                      ? '📁 Данные сохраняются в SQLite'
-                      : '💾 Данные хранятся в памяти',
+                  'Пусть твои желания сбудутся!',
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
+                    color: AppTheme.lightRedText.withOpacity(0.8),
                     fontSize: 14,
+                    fontStyle: FontStyle.italic,
                   ),
                 ),
               ],
