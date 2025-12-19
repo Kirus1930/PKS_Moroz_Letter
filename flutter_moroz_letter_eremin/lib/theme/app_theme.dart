@@ -114,7 +114,7 @@ class AppTheme {
     iconTheme: IconThemeData(color: blueText, size: 24),
 
     // Диалоги
-    dialogTheme: DialogTheme(
+    dialogTheme: DialogThemeData(
       backgroundColor: Colors.white,
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
